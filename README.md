@@ -68,3 +68,6 @@ At each time step, we would like to pick the network (not necessarily the one wi
 
 - [Intuition behind the Beta distribution](https://stats.stackexchange.com/questions/47771/what-is-the-intuition-behind-beta-distribution)
 - [Thompson Sampling](http://proceedings.mlr.press/v23/agrawal12/agrawal12.pdf)
+- [Code](https://github.com/lilianweng/multi-armed-bandit)
+- [A/B Testing](https://en.wikipedia.org/wiki/A/B_testing)
+- [Thompson Sampling](https://arxiv.org/pdf/1707.02038.pdf)
