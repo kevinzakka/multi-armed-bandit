@@ -1,9 +1,9 @@
 """Slot machines with different rewards.
 """
 
-import numpy as np
-
 from abc import ABC, abstractmethod
+
+import numpy as np
 
 
 class SlotMachine(ABC):

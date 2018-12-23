@@ -1,9 +1,9 @@
 """Various algorithms for solving stochastic multi-armed-bandit problems.
 """
 
-import numpy as np
-
 from abc import ABC, abstractmethod
+
+import numpy as np
 
 
 class Solver(ABC):
