@@ -1,4 +1,4 @@
-"""Slot machines with different rewards.
+"""Slot machines with various reward distributions.
 """
 
 from abc import ABC, abstractmethod
@@ -23,9 +23,10 @@ class SlotMachine(ABC):
     """
     @abstractmethod
     def __init__(self, N, seed):
-        np.random.seed(seed)
-
+        self.seed = seed
         self.N = N
+
+        np.random.seed(seed)
 
     @abstractmethod
     def pull(self, i):

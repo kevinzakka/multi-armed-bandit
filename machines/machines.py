@@ -1,6 +1,9 @@
 import numpy as np
+from scipy.stats import truncnorm
 
 from .base import SlotMachine
+
+EPS = 1e-10  # for numerical stability
 
 
 class BernouilliSM(SlotMachine):
@@ -17,14 +20,14 @@ class BernouilliSM(SlotMachine):
         If the number is below the true mean of the arm,
         return 1. Else return 0.
         """
-        if np.random.random() < self.means[i]:
-            return 1.
-        return 0.
+        return np.random.binomial(1, self.means[i])
 
 
 class GaussianSM(SlotMachine):
     """A slot machine with Gaussian rewards.
     """
+    EPS = 1e-10  # for numerical stability
+
     def __init__(self, N, means, stds, seed):
         super().__init__(N, seed)
 
@@ -32,11 +35,16 @@ class GaussianSM(SlotMachine):
         self.stds = stds
 
     def pull(self, i):
-        """Samples a reward from a Gaussian distribution.
+        """Samples a reward from a truncated Gaussian distribution.
 
         The Gaussian is parameterized by `means[i]` and `stds[i]`.
         """
-        return np.random.normal(self.means[i], self.stds[i])
+        return truncnorm.rvs(
+            (0 - self.means[i]) / (self.stds[i] + EPS),
+            (1 - self.means[i]) / (self.stds[i] + EPS),
+            loc=self.means[i],
+            scale=self.stds[i],
+        )
 
 
 class BinomialSM(SlotMachine):
