@@ -115,13 +115,10 @@ class EpsilonGreedy(Solver):
         else:
             r = r_
 
-        # compute regret
-        regret = self.sm.best_proba - self.sm.means[idx]
-
         # update probability estimates
         self._update(r, idx)
 
-        return (idx, r, regret)
+        return (idx, r)
 
 
 class AnnealedEpsilonGreedy(Solver):
