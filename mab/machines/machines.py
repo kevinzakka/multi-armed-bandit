@@ -9,8 +9,8 @@ EPS = 1e-10  # for numerical stability
 class BernouilliSM(SlotMachine):
     """A slot machine with Bernouilli rewards.
     """
-    def __init__(self, N, means, seed):
-        super().__init__(N, seed)
+    def __init__(self, n, means, seed):
+        super().__init__(n, seed)
 
         self.means = means
 
@@ -28,8 +28,8 @@ class GaussianSM(SlotMachine):
     """
     EPS = 1e-10  # for numerical stability
 
-    def __init__(self, N, means, stds, seed):
-        super().__init__(N, seed)
+    def __init__(self, n, means, stds, seed):
+        super().__init__(n, seed)
 
         self.means = means
         self.stds = stds

@@ -1,7 +1,7 @@
 import numpy as np
 
 from .base import Solver
-from ipdb import set_trace as debug
+
 
 class ThompsonSampling(Solver):
     """The Thompson Sampling algorithm.
@@ -25,12 +25,12 @@ class ThompsonSampling(Solver):
 
     def _reset(self):
         super()._reset()
-        self._successes = [self._s_init] * self.sm.N
-        self._failures = [self._f_init] * self.sm.N
+        self._successes = [self._s_init] * self.sm.n
+        self._failures = [self._f_init] * self.sm.n
 
     def _select_arm(self):
         thetas = []
-        for i in range(self.sm.N):
+        for i in range(self.sm.n):
             thetas.append(
                 np.random.beta(
                     self._successes[i]+1,
@@ -83,7 +83,7 @@ class EpsilonGreedy(Solver):
 
     def _reset(self):
         super()._reset()
-        self._probas = [self._prob_init] * self.sm.N
+        self._probas = [self._prob_init] * self.sm.n
 
     def _select_arm(self):
         # decide whether to explore
@@ -91,13 +91,13 @@ class EpsilonGreedy(Solver):
 
         if self._explore:
             # select an arm with uniform probability
-            return np.random.randint(0, self.sm.N)
+            return np.random.randint(0, self.sm.n)
         else:
             # select the arm with the highest probability
             return np.argmax(self._probas)
 
     def _update(self, r, idx):
-        new_count = self.counts[idx] + 1
+        new_count = self._counts[idx] + 1
         weighted_sum_1 = ((new_count - 1) / (new_count)) * self._probas[idx]
         weighted_sum_2 = (1. / (new_count)) * r
         self._probas[idx] = weighted_sum_1 + weighted_sum_2
@@ -115,10 +115,13 @@ class EpsilonGreedy(Solver):
         else:
             r = r_
 
+        # compute regret
+        regret = self.sm.best_proba - self.sm.means[idx]
+
         # update probability estimates
         self._update(r, idx)
 
-        return (idx, r)
+        return (idx, r, regret)
 
 
 class AnnealedEpsilonGreedy(Solver):

@@ -7,9 +7,9 @@ import numpy as np
 
 
 class SlotMachine(ABC):
-    """A slot machine with `N` arms.
+    """A slot machine with `n` arms.
 
-    At every time step `t`, one of the N arms is chosen. When
+    At every time step `t`, one of the `n` arms is chosen. When
     pulled, every arm `i` yields a random real-valued reward
     according to some fixed (unknown) distribution with support
     in [0, 1]. The random rewards obtained from pulling an arm
@@ -18,13 +18,13 @@ class SlotMachine(ABC):
     the arm.
 
     Attributes:
-        N: (int) number of arms.
-        seed: (float) RNG seed.
+        n: (int) number of arms.
+        seed: (int) RNG seed.
     """
     @abstractmethod
-    def __init__(self, N, seed):
+    def __init__(self, n, seed):
         self.seed = seed
-        self.N = N
+        self.n = n
 
         np.random.seed(seed)
 
