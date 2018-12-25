@@ -3,8 +3,6 @@
 
 from abc import ABC, abstractmethod
 
-import numpy as np
-
 
 class SlotMachine(ABC):
     """A slot machine with `n` arms.
@@ -19,14 +17,12 @@ class SlotMachine(ABC):
 
     Attributes:
         n: (int) number of arms.
-        seed: (int) RNG seed.
+        rng: (RandomState) a numpy RNG.
     """
     @abstractmethod
-    def __init__(self, n, seed):
-        self.seed = seed
+    def __init__(self, n, rng):
         self.n = n
-
-        np.random.seed(seed)
+        self.rng = rng
 
     @abstractmethod
     def pull(self, i):

@@ -3,6 +3,7 @@
 
 from abc import ABC, abstractmethod
 
+import os
 import numpy as np
 
 
@@ -21,12 +22,15 @@ class Solver(ABC):
         self._reset()
 
     @abstractmethod
+    def __repr__(self):
+        pass
+
+    @abstractmethod
     def _reset(self):
         """Resets the solver.
         """
-        self._counts = [0.] * self.sm.n  # number of times each arm has been pulled
-        self._rewards = []  # history of rewards
-        np.random.seed(self.sm.seed)
+        self._counter = [0.] * self.sm.n  # a counter for each arm's number of pulls
+        self._rewards = []  # all rewards up to time step `t`.
 
     @abstractmethod
     def _select_arm(self):
@@ -51,24 +55,27 @@ class Solver(ABC):
     def solve(self, t):
         """Runs the solver for a fixed number of time steps `t`.
         """
+        # clear all internal variables
         self._reset()
+
         for _ in range(t):
-            idx, r = self._solve()  # run for a single time step
-            self._counts[idx] += 1  # keep track of what arm was picked
-            self._rewards.append(r)  # store obtained reward
+            # run for a single time step
+            idx, r = self._solve()
+
+            # keep track of what arm was pulled
+            self._counter[idx] += 1
+
+            # store obtained reward
+            self._rewards.append(r)
 
     @property
-    def counts(self):
-        return self._counts
+    def counter(self):
+        return self._counter
 
     @property
     def rewards(self):
         return self._rewards
 
     @property
-    def regrets(self):
-        return np.cumsum(self._regrets)
-
-    @property
-    def cumulative_rewards(self):
+    def cumreward(self):
         return np.cumsum(self._rewards)

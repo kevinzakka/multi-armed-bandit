@@ -23,6 +23,9 @@ class ThompsonSampling(Solver):
 
         self._reset()
 
+    def __repr__(self):
+        return "ts"
+
     def _reset(self):
         super()._reset()
         self._successes = [self._s_init] * self.sm.n
@@ -32,7 +35,7 @@ class ThompsonSampling(Solver):
         thetas = []
         for i in range(self.sm.n):
             thetas.append(
-                np.random.beta(
+                self.sm.rng.beta(
                     self._successes[i]+1,
                     self._failures[i]+1,
                 )
@@ -52,7 +55,7 @@ class ThompsonSampling(Solver):
 
         # if continuous, make binary
         if r_ > 0. and r_ < 1.:
-            r = np.random.binomial(1, r_)
+            r = self.sm.rng.binomial(1, r_)
         else:
             r = r_
 
@@ -81,25 +84,28 @@ class EpsilonGreedy(Solver):
 
         self._reset()
 
+    def __repr__(self):
+        return "eg"
+
     def _reset(self):
         super()._reset()
         self._probas = [self._prob_init] * self.sm.n
 
     def _select_arm(self):
         # decide whether to explore
-        self._explore = np.random.binomial(1, self._eps)
+        self._explore = self.sm.rng.binomial(1, self._eps)
 
         if self._explore:
             # select an arm with uniform probability
-            return np.random.randint(0, self.sm.n)
+            return self.sm.rng.randint(0, self.sm.n)
         else:
             # select the arm with the highest probability
             return np.argmax(self._probas)
 
     def _update(self, r, idx):
-        new_count = self._counts[idx] + 1
-        weighted_sum_1 = ((new_count - 1) / (new_count)) * self._probas[idx]
-        weighted_sum_2 = (1. / (new_count)) * r
+        new_counter = self._counter[idx] + 1
+        weighted_sum_1 = ((new_counter - 1) / (new_counter)) * self._probas[idx]
+        weighted_sum_2 = (1. / (new_counter)) * r
         self._probas[idx] = weighted_sum_1 + weighted_sum_2
 
     def _solve(self):
@@ -111,7 +117,7 @@ class EpsilonGreedy(Solver):
 
         # if continuous, make binary
         if r_ > 0. and r_ < 1.:
-            r = np.random.binomial(1, r_)
+            r = self.sm.rng.binomial(1, r_)
         else:
             r = r_
 

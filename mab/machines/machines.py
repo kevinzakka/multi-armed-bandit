@@ -9,8 +9,8 @@ EPS = 1e-10  # for numerical stability
 class BernouilliSM(SlotMachine):
     """A slot machine with Bernouilli rewards.
     """
-    def __init__(self, n, means, seed):
-        super().__init__(n, seed)
+    def __init__(self, n, means, rng):
+        super().__init__(n, rng)
 
         self.means = means
 
@@ -20,7 +20,7 @@ class BernouilliSM(SlotMachine):
         If the number is below the true mean of the arm,
         return 1. Else return 0.
         """
-        return np.random.binomial(1, self.means[i])
+        return self.rng.binomial(1, self.means[i])
 
 
 class GaussianSM(SlotMachine):
@@ -28,8 +28,8 @@ class GaussianSM(SlotMachine):
     """
     EPS = 1e-10  # for numerical stability
 
-    def __init__(self, n, means, stds, seed):
-        super().__init__(n, seed)
+    def __init__(self, n, means, stds, rng):
+        super().__init__(n, rng)
 
         self.means = means
         self.stds = stds
@@ -44,6 +44,7 @@ class GaussianSM(SlotMachine):
             (1 - self.means[i]) / (self.stds[i] + EPS),
             loc=self.means[i],
             scale=self.stds[i],
+            seed=self.rng,
         )
 
 
