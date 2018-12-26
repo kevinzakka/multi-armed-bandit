@@ -39,6 +39,8 @@ class Visualizer(object):
         for i, key in enumerate(self.filenames.keys()):
             # compute average cumulative reward
             filenames = self.filenames[key]['rewards']
+            if i == 0:
+                num_trials = len(filenames)
             rewards = []
             for name in filenames:
                 rewards.append(np.cumsum(np.load(os.path.join(self.dirname, name))))
@@ -72,5 +74,5 @@ class Visualizer(object):
         fig.legend(handles, labels, loc='upper center')
         plt.subplots_adjust(wspace=0.2)
         if save:
-            plt.savefig("./assets/performance.png", format="png", dpi=300)
+            plt.savefig("./assets/performance_{}.png".format(num_trials), format="png", dpi=300)
         plt.show()

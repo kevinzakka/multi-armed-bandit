@@ -11,8 +11,8 @@ from mab import machines, solvers, viz
 
 
 DUMP_DIR = './dump/'
-TIME_STEPS = 500 # how many solver runs
-SEED_ITERS = 2000 # how many times to run everything
+TIME_STEPS = 5000
+SEED_ITERS = 50
 ALGOS = {
     'thompson-sampling': [solvers.ThompsonSampling, [0, 0]],
     'epsilon-greedy-0.1': [solvers.EpsilonGreedy, [0.01, 1.]],
@@ -23,31 +23,20 @@ ALGOS = {
 
 
 def main():
-    # prepare dump dir
     if not os.path.exists(DUMP_DIR):
         os.makedirs(DUMP_DIR)
-
-    # compute
     for i in range(SEED_ITERS):
         print("Iter: {}/{}".format(i+1, SEED_ITERS))
-        # random number generator
-        rng = RandomState(int(time.time()))
-
-        # randomly sample arm probabilities
-        probas = [rng.rand() for _ in range(10)]
-
-        # instantiate slot machine
-        sm = machines.BernouilliSM(len(probas), probas, rng)
-
-        # run algorithms
+        seed = int(time.time())
+        probas = [np.random.random() for _ in range(10)]
         for name, (algo, args) in ALGOS.items():
             print('\tBenchmarking {}...'.format(name))
+            rng = RandomState(seed)
+            sm = machines.BernouilliSM(len(probas), probas, rng)
             solver = algo(sm, *args)
             solver.solve(TIME_STEPS)
             solver.save(DUMP_DIR, i)
         time.sleep(1)
-
-    # visualize
     vis = viz.Visualizer(DUMP_DIR)
     vis.plot(save=True)
 
