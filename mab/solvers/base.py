@@ -1,9 +1,9 @@
 """Various algorithms for solving stochastic multi-armed-bandit problems.
 """
 
+import os
 from abc import ABC, abstractmethod
 
-import os
 import numpy as np
 
 
@@ -30,6 +30,7 @@ class Solver(ABC):
         """
         self._counter = [0.] * self.sm.n  # a counter for each arm's number of pulls
         self._rewards = []  # all rewards up to time step `t`.
+        self._regrets = []  # all regrets up to time step `t`.
 
     @abstractmethod
     def _select_arm(self):
@@ -59,29 +60,26 @@ class Solver(ABC):
 
         for _ in range(t):
             # run for a single time step
-            idx, r = self._solve()
+            idx, rew, reg = self._solve()
 
             # keep track of what arm was pulled
             self._counter[idx] += 1
 
-            # store obtained reward
-            self._rewards.append(r)
+            # store reward and regret
+            self._rewards.append(rew)
+            self._regrets.append(reg)
 
     def save(self, dirname, id):
         """Dumps number of pulls and rewards to directory.
         """
         if not os.path.exists(dirname):
             os.makedirs(dirname)
-        counter_filename = os.path.join(
-            dirname,
-            self.__repr__() + "_{}_counter.npy".format(id)
-        )
-        rewards_filename = os.path.join(
-            dirname,
-            self.__repr__() + "_{}_rewards.npy".format(id)
-        )
-        np.save(counter_filename, self._counter)
+        rewards_filename = os.path.join(dirname, self.__repr__() + "-{}-rewards.npy".format(id))
+        regrets_filename = os.path.join(dirname, self.__repr__() + "-{}-regrets.npy".format(id))
+        counter_filename = os.path.join(dirname, self.__repr__() + "-{}-counter.npy".format(id))
         np.save(rewards_filename, self._rewards)
+        np.save(regrets_filename, self._regrets)
+        np.save(counter_filename, self._counter)
 
     @property
     def counter(self):
@@ -92,5 +90,13 @@ class Solver(ABC):
         return self._rewards
 
     @property
+    def regrets(self):
+        return self._regrets
+
+    @property
     def cumreward(self):
         return np.cumsum(self._rewards)
+
+    @property
+    def cumregret(self):
+        return np.cumsum(self._regrets)

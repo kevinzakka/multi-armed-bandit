@@ -3,6 +3,7 @@ from scipy.stats import truncnorm
 
 from .base import SlotMachine
 
+
 EPS = 1e-10  # for numerical stability
 
 
@@ -21,6 +22,12 @@ class BernouilliSM(SlotMachine):
         return 1. Else return 0.
         """
         return self.rng.binomial(1, self.means[i])
+
+    @property
+    def max_mean(self):
+        """Returns the max arm mean.
+        """
+        return np.max(self.means)
 
 
 class GaussianSM(SlotMachine):
@@ -46,6 +53,12 @@ class GaussianSM(SlotMachine):
             scale=self.stds[i],
             seed=self.rng,
         )
+
+    @property
+    def max_mean(self):
+        """Returns the max arm mean.
+        """
+        return np.max(self.means)
 
 
 class BinomialSM(SlotMachine):
