@@ -18,7 +18,6 @@ class Solver(ABC):
     @abstractmethod
     def __init__(self, sm):
         self.sm = sm
-
         self._reset()
 
     @abstractmethod
@@ -67,6 +66,22 @@ class Solver(ABC):
 
             # store obtained reward
             self._rewards.append(r)
+
+    def save(self, dirname, id):
+        """Dumps number of pulls and rewards to directory.
+        """
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        counter_filename = os.path.join(
+            dirname,
+            self.__repr__() + "_{}_counter.npy".format(id)
+        )
+        rewards_filename = os.path.join(
+            dirname,
+            self.__repr__() + "_{}_rewards.npy".format(id)
+        )
+        np.save(counter_filename, self._counter)
+        np.save(rewards_filename, self._rewards)
 
     @property
     def counter(self):
