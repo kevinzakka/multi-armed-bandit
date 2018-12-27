@@ -19,16 +19,17 @@ ALGOS = {
     'epsilon-greedy-0.2': [solvers.EpsilonGreedySampler, [0.02, 1.]],
     'epsilon-greedy-0.3': [solvers.EpsilonGreedySampler, [0.03, 1.]],
     'epsilon-greedy-0.4': [solvers.EpsilonGreedySampler, [0.04, 1.]],
+    'random-sampling': [solvers.RandomSampler, []]
 }
 
 
 def main():
     if not os.path.exists(DUMP_DIR):
         os.makedirs(DUMP_DIR)
+    probas = [0.027, 0.03, 0.028, 0.001, 0.05, 0.06, 0.0234, 0.035, 0.01, 0.012]
     for i in range(SEED_ITERS):
         print("Iter: {}/{}".format(i+1, SEED_ITERS))
         seed = int(time.time())
-        probas = [np.random.random() for _ in range(10)]
         for name, (algo, args) in ALGOS.items():
             print('\tBenchmarking {}...'.format(name))
             rng = RandomState(seed)

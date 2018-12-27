@@ -24,6 +24,7 @@ def main():
     total_rewards = np.mean(total_rewards, axis=0)
     best_eps = epsilons[np.argmax(total_rewards)]
     print("Best ε: {}".format(best_eps))
+    plt.figure(figsize=(15, 8))
     plt.plot(epsilons, total_rewards, '.-')
     plt.xlabel("Value of ε")
     plt.ylabel("Total Reward")

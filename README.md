@@ -9,5 +9,5 @@
 **Tuning Epsilon-Greedy Parameter**
 
 <p align="center">
- <img src="./assets/eps-tune.png" alt="Drawing" width=50%>
+ <img src="./assets/eps-tune.png" alt="Drawing">
 </p>
