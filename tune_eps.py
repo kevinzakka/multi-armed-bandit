@@ -23,9 +23,13 @@ def main():
         total_rewards.append(rewards)
     total_rewards = np.mean(total_rewards, axis=0)
     best_eps = epsilons[np.argmax(total_rewards)]
+    best_rew = np.max(total_rewards)
     print("Best ε: {}".format(best_eps))
     plt.figure(figsize=(15, 8))
     plt.plot(epsilons, total_rewards, '.-')
+    plt.axvline(x=best_eps, color='r', linestyle='--', alpha=0.4)
+    plt.axhline(y=best_rew, color='r', linestyle='--', alpha=0.4)
+    plt.plot(best_eps, best_rew, 'r*')
     plt.xlabel("Value of ε")
     plt.ylabel("Total Reward")
     plt.grid('k', ls='--', alpha=0.3)
