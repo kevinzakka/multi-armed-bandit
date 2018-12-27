@@ -1,4 +1,4 @@
-# Stochastic Multi-Armed Bandit Problem
+# Stochastic Multi-Armed Bandit
 
 **Benchmarking Algorithm Performance.**
 
@@ -6,7 +6,7 @@
  <img src="./assets/performance_50.png" alt="Drawing">
 </p>
 
-**Tuning Epsilon-Greedy Parameter**
+**Tuning Epsilon-Greedy Parameter.**
 
 <p align="center">
  <img src="./assets/eps-tune.png" alt="Drawing">
