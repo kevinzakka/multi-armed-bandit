@@ -14,7 +14,7 @@ DUMP_DIR = './dump/'
 TIME_STEPS = 5000
 SEED_ITERS = 50
 ALGOS = {
-    'thompson-sampling': [solvers.ThompsonSampling, [0, 0]],
+    'thompson-sampling': [solvers.ThompsonSampler, [0, 0]],
     'epsilon-greedy-0.1': [solvers.EpsilonGreedy, [0.01, 1.]],
     'epsilon-greedy-0.2': [solvers.EpsilonGreedy, [0.02, 1.]],
     'epsilon-greedy-0.3': [solvers.EpsilonGreedy, [0.03, 1.]],
