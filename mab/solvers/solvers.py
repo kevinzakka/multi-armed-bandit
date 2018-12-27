@@ -4,7 +4,7 @@ from .base import Solver
 
 
 class RandomSampler(Solver):
-    """A sampler that randomly chooses an arm to pull.
+    """A sampler that randomly chooses what arm to pull.
 
     This should really only be used for baseline comparisons.
     """
@@ -26,24 +26,14 @@ class RandomSampler(Solver):
         pass
 
     def _solve(self):
-        # decide what arm to pull
         idx = self._select_arm()
-
-        # pull arm and receive reward
         r = self.sm.pull(idx)
-
-        # if continuous, make binary
         if r > 0. and r < 1.:
             rew = self.sm.rng.binomial(1, r)
         else:
             rew = r
-
-        # compute regret
         reg = self.sm.max_mean - self.sm.means[idx]
-
-        # update success and failure counts
         self._update(rew, idx)
-
         return (idx, rew, reg)
 
 

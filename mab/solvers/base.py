@@ -100,3 +100,11 @@ class Solver(ABC):
     @property
     def cumregret(self):
         return np.cumsum(self._regrets)
+
+    @property
+    def total_reward(self):
+        return np.sum(self._rewards)
+
+    @property
+    def total_regret(self):
+        return np.sum(self._regrets)
