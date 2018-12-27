@@ -47,7 +47,7 @@ class Solver(ABC):
         pass
 
     @abstractmethod
-    def _solve(self):
+    def _solve(self, t_i):
         """Runs the solver for one time step.
         """
         pass
@@ -58,9 +58,9 @@ class Solver(ABC):
         # clear all internal variables
         self._reset()
 
-        for _ in range(t):
+        for t_i in range(t):
             # run for a single time step
-            idx, rew, reg = self._solve()
+            idx, rew, reg = self._solve(t_i)
 
             # keep track of what arm was pulled
             self._counter[idx] += 1

@@ -25,7 +25,7 @@ class RandomSampler(Solver):
     def _update(self, rew, idx):
         pass
 
-    def _solve(self):
+    def _solve(self, t_i):
         idx = self._select_arm()
         r = self.sm.pull(idx)
         if r > 0. and r < 1.:
@@ -80,29 +80,19 @@ class ThompsonSampler(Solver):
         self._successes[idx] += rew
         self._failures[idx] += (1 - rew)
 
-    def _solve(self):
-        # decide what arm to pull
+    def _solve(self, t_i):
         idx = self._select_arm()
-
-        # pull arm and receive reward
         r = self.sm.pull(idx)
-
-        # if continuous, make binary
         if r > 0. and r < 1.:
             rew = self.sm.rng.binomial(1, r)
         else:
             rew = r
-
-        # compute regret
         reg = self.sm.max_mean - self.sm.means[idx]
-
-        # update success and failure counts
         self._update(rew, idx)
-
         return (idx, rew, reg)
 
 
-class EpsilonGreedy(Solver):
+class EpsilonGreedySampler(Solver):
     """The ε-greedy algorithm.
 
     Attributes:
@@ -111,11 +101,14 @@ class EpsilonGreedy(Solver):
             (i.e. no exploration).
         prob_init: (float) initial probability estimate for
             each arm.
+        exp_iters: (float) how many iterations to spend on
+            pure exploration.
     """
-    def __init__(self, sm, eps, prob_init):
+    def __init__(self, sm, eps, prob_init, exp_iters=0):
         self._eps = np.clip(eps, 0., 1.)
         self._prob_init = prob_init
-        self._explore = False
+        self._exp_iters = exp_iters
+        self._explore = True
 
         super().__init__(sm)
 
@@ -129,15 +122,9 @@ class EpsilonGreedy(Solver):
         self._probas = [self._prob_init] * self.sm.n
 
     def _select_arm(self):
-        # decide whether to explore
-        self._explore = self.sm.rng.binomial(1, self._eps)
-
-        if self._explore:
-            # select an arm with uniform probability
+        if self._explore or self.sm.rng.binomial(1, self._eps):
             return self.sm.rng.randint(0, self.sm.n)
-        else:
-            # select the arm with the highest probability
-            return np.argmax(self._probas)
+        return np.argmax(self._probas)
 
     def _update(self, rew, idx):
         new_counter = self._counter[idx] + 1
@@ -145,27 +132,19 @@ class EpsilonGreedy(Solver):
         weighted_sum_2 = (1. / (new_counter)) * rew
         self._probas[idx] = weighted_sum_1 + weighted_sum_2
 
-    def _solve(self):
-        # decide what arm to pull
+    def _solve(self, t_i):
+        if t_i >= self._exp_iters:
+            self._explore = False
         idx = self._select_arm()
-
-        # pull arm and receive reward
         r = self.sm.pull(idx)
-
-        # if continuous, make binary
         if r > 0. and r < 1.:
             rew = self.sm.rng.binomial(1, r)
         else:
             rew = r
-
-        # compute regret
         reg = self.sm.max_mean - self.sm.means[idx]
-
-        # update probability estimates
         self._update(rew, idx)
-
         return (idx, rew, reg)
 
 
-class AnnealedEpsilonGreedy(Solver):
+class AnnealedEpsilonGreedySampler(Solver):
     pass

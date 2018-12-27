@@ -1,1 +1,1 @@
-from .solvers import EpsilonGreedy, ThompsonSampler, RandomSampler
+from .solvers import EpsilonGreedySampler, ThompsonSampler, RandomSampler

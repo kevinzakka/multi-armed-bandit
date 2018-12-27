@@ -15,10 +15,10 @@ TIME_STEPS = 5000
 SEED_ITERS = 50
 ALGOS = {
     'thompson-sampling': [solvers.ThompsonSampler, [0, 0]],
-    'epsilon-greedy-0.1': [solvers.EpsilonGreedy, [0.01, 1.]],
-    'epsilon-greedy-0.2': [solvers.EpsilonGreedy, [0.02, 1.]],
-    'epsilon-greedy-0.3': [solvers.EpsilonGreedy, [0.03, 1.]],
-    'epsilon-greedy-0.4': [solvers.EpsilonGreedy, [0.04, 1.]],
+    'epsilon-greedy-0.1': [solvers.EpsilonGreedySampler, [0.01, 1.]],
+    'epsilon-greedy-0.2': [solvers.EpsilonGreedySampler, [0.02, 1.]],
+    'epsilon-greedy-0.3': [solvers.EpsilonGreedySampler, [0.03, 1.]],
+    'epsilon-greedy-0.4': [solvers.EpsilonGreedySampler, [0.04, 1.]],
 }
 
 

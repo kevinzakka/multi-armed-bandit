@@ -17,7 +17,7 @@ def main():
         for eps in epsilons:
             rng = RandomState(seed)
             sm = machines.BernouilliSM(len(probas), probas, rng)
-            solver = solvers.EpsilonGreedy(sm, eps,  1.0)
+            solver = solvers.EpsilonGreedySampler(sm, eps,  1.0)
             solver.solve(1000)
             rewards.append(np.sum(solver.rewards))
         total_rewards.append(rewards)
